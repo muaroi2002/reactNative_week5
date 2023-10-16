@@ -1,32 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
 
-export default function Screen1({ navigation }) {
+export default function Screen1({ route, navigation }) {
     const [rating, setRating] = useState(0);
     const [selectedColor, setSelectedColor] = useState('blue');
     const [selectedImage, setSelectedImage] = useState(require('../assets/vs_blue.png'));
-
     const handleRating = (value) => {
         setRating(value);
     };
 
-    const handleProduct = (value, color, image) => {
-        setRating(value);
-        setSelectedColor(color);
-        setSelectedImage(image);
-    };
+    useEffect(() => {
+        // Cập nhật màu đã chọn từ Screen2 nếu có
+        if (route.params && route.params.selectedColor) {
+            setSelectedColor(route.params.selectedColor);
+            setSelectedImage(route.params.selectedImage);
+        }
+    }, [route.params]);
 
-    // Lấy màu và hình ảnh từ tham số định tuyến (route)
-    const { color, image } = route.params || {};
-
-    // Nếu màu và hình ảnh có sẵn, cập nhật trạng thái
-    if (color && image) {
-        setSelectedColor(color);
-        setSelectedImage(image);
-    }
     return (
         <View style={styles.container}>
-            <Image style={styles.productImage} source={require('../assets/vs_blue.png')} />
+            <Image style={styles.productImage} source={selectedImage} />
             <Text style={styles.productName}>Điện thoại Vsmart Joy 3- Hàng chính hãng</Text>
             <View style={styles.ratingContainer}>
                 {Array(5).fill(0).map((_, index) => (
@@ -38,18 +31,17 @@ export default function Screen1({ navigation }) {
                             source={
                                 index + 1 <= rating
                                     ? require('../assets/star.png')
-                                    : require('../assets/empty_star.png') // Hình ảnh sao trống
+                                    : require('../assets/empty_star.png')
                             }
                             style={styles.starIcon}
                         />
                     </TouchableOpacity>
-
                 ))}
                 <TouchableOpacity
                     style={styles.viewReviewsButton}
                     onPress={() => {
-
-                    }} 
+                        // Xử lý khi nhấn nút xem đánh giá
+                    }}
                 >
                     <Text style={styles.viewReviewsText}>Xem đánh giá</Text>
                 </TouchableOpacity>
@@ -67,20 +59,18 @@ export default function Screen1({ navigation }) {
                     />
                 </TouchableOpacity>
             </View>
-
-           <TouchableOpacity
+            <TouchableOpacity
                 style={styles.colorOptionsButton}
                 onPress={() => {
                     navigation.navigate('Screen2', {
-                        onColorChange: (color, image) => {
-                            handleProduct(rating, color, image);
-                        }
+                        selectedColor,
+                        selectedImage,
+                        
                     });
                 }}
             >
                 <Text style={styles.colorOptionsText}>Chọn màu</Text>
             </TouchableOpacity>
-
             <Button title="Chọn mua" onPress={() => alert("Đã chọn mua")} />
         </View>
     );
@@ -98,7 +88,6 @@ const styles = StyleSheet.create({
         height: 361,
         top: -2,
         left: 10
-
     },
     productName: {
         fontSize: 18,
@@ -118,7 +107,7 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         marginTop: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     viewReviewsButton: {
         backgroundColor: 'blue',

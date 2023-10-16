@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function Screen2({ navigation }) {
+export default function Screen2({ route, navigation }) {
     const [productInfo, setProductInfo] = useState({
         color: 'blue',
         image: require('../assets/vs_blue.png'),
@@ -19,10 +19,6 @@ export default function Screen2({ navigation }) {
             text,
         });
     }
-    useEffect(() => {
-        navigation.setParams({ color: productInfo.color, image: productInfo.image });
-    }, [productInfo.color, productInfo.image]);
-    
 
     return (
         <View style={styles.container}>
@@ -40,18 +36,37 @@ export default function Screen2({ navigation }) {
             <View style={styles.productColor}>
                 <Text style={styles.productText}>Chọn 1 màu bên dưới</Text>
                 <View style={styles.colorOptions}>
-                    <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#C5F1FB' }]} onPress={() => handleColorChange('#C5F1FB', require('../assets/vs_silver.png'), 'Nhà cung cấp: SilverPhones', 'Xanh')}></TouchableOpacity>
-                    <TouchableOpacity style={[styles.colorOption, { backgroundColor: 'red' }]} onPress={() => handleColorChange('red', require('../assets/vs_red.png'), 'Nhà cung cấp: RedMobiles', 'Đỏ')}></TouchableOpacity>
-                    <TouchableOpacity style={[styles.colorOption, { backgroundColor: 'black' }]} onPress={() => handleColorChange('black', require('../assets/vs_black.png'), 'Nhà cung cấp: BlackTech', 'Đen')}></TouchableOpacity>
-                    <TouchableOpacity style={[styles.colorOption, { backgroundColor: '#234896' }]} onPress={() => handleColorChange('#234896', require('../assets/vs_blue.png'), 'Nhà cung cấp: CellphoneS', 'Khác')}></TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.colorOption, { backgroundColor: '#C5F1FB' }]}
+                        onPress={() => handleColorChange('#C5F1FB', require('../assets/vs_silver.png'), 'Nhà cung cấp: SilverPhones', 'Xanh')}>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.colorOption, { backgroundColor: 'red' }]}
+                        onPress={() => handleColorChange('red', require('../assets/vs_red.png'), 'Nhà cung cấp: RedMobiles', 'Đỏ')}>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.colorOption, { backgroundColor: 'black' }]}
+                        onPress={() => handleColorChange('black', require('../assets/vs_black.png'), 'Nhà cung cấp: BlackTech', 'Đen')}>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.colorOption, { backgroundColor: '#234896' }]}
+                        onPress={() => handleColorChange('#234896', require('../assets/vs_blue.png'), 'Nhà cung cấp: CellphoneS', 'Khác')}>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.footer}>
-                    <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Screen1')}>
-                        <Text style={styles.footerButtonText}>Xong</Text>
-                    </TouchableOpacity>
-                </View>
-
+                <TouchableOpacity
+                    style={styles.footerButton}
+                    onPress={() => {
+                        navigation.navigate('Screen1', {
+                            selectedColor: productInfo.color,
+                            selectedImage: productInfo.image,
+                        });
+                    }}
+                >
+                    <Text style={styles.footerButtonText}>Xong</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -104,7 +119,6 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     footer: {
-
         backgroundColor: '#fff',
         alignItems: 'center',
     },
